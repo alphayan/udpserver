@@ -29,8 +29,8 @@ func server() {
 		fmt.Println("channelid:",string(data[2:22]))
 		fmt.Println("user:",string(data[22:42]))
 		fmt.Println("filename:",string(data[42:78]))
-		fmt.Println("flag:",string(data[78:96]))
-		fmt.Println("token:",string(data[96:296]))
+		fmt.Println("flag:",string(data[78:86]))
+		fmt.Println("token:",string(data[86:286]))
 		fmt.Println("data:",data[296:read])
 		_,err=conn.WriteToUDP(data,remoteAddr)
 		if err != nil {
