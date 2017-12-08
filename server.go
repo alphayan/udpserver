@@ -1,10 +1,11 @@
 package main
 
 import (
-
 	"fmt"
 	"net"
 )
+
+var remotes = make(map[string]*net.UDPAddr)
 
 func server() {
 	conn, err := net.ListenUDP("udp", &net.UDPAddr{
@@ -25,18 +26,26 @@ func server() {
 			continue
 		}
 		fmt.Println(data[:read])
-		fmt.Println("cmd:",string(data[:2]))
-		fmt.Println("channelid:",string(data[2:22]))
-		fmt.Println("user:",string(data[22:42]))
-		fmt.Println("filename:",string(data[42:78]))
-		fmt.Println("flag:",string(data[78:86]))
-		fmt.Println("token:",string(data[86:286]))
-		fmt.Println("data:",data[296:read])
-		_,err=conn.WriteToUDP(data,remoteAddr)
-		if err != nil {
-			fmt.Println("写入数据失败!", err)
-			continue
+		//fmt.Println("cmd:", string(data[:2]))
+		//fmt.Println("channelid:", string(data[2:22]))
+		//fmt.Println("user:", string(data[22:42]))
+		//fmt.Println("filename:", string(data[42:78]))
+		//fmt.Println("flag:", string(data[78:86]))
+		//fmt.Println("token:", string(data[86:286]))
+		//fmt.Println("data:", data[296:read])
+		if _, ok := remotes[remoteAddr.String()]; ok {
+
+		} else {
+			remotes[remoteAddr.String()] = remoteAddr
 		}
+		fmt.Println("所有的客户端信息：",remotes)
+		for _, v := range remotes {
+			_, err = conn.WriteToUDP(data, v)
+			if err != nil {
+				fmt.Println("写入数据失败!", err)
+				continue
+			}
+		}
+
 	}
 }
-
